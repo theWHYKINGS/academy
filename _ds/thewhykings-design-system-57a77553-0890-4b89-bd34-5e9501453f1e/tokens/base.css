@@ -1,0 +1,54 @@
+/* theWHYKINGS — base element styles & helpers.
+   Light-touch resets and brand-default typography for body copy. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font: var(--text-body);
+  color: var(--color-fg);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings default to the display voice */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-fg);
+  margin: 0 0 var(--space-4);
+  letter-spacing: var(--ls-tight);
+  text-wrap: balance;
+}
+h1 { font: var(--text-h1); }
+h2 { font: var(--text-h2); }
+h3 { font: var(--text-h3); }
+h4 { font-size: var(--fs-h4); font-weight: var(--fw-semibold); line-height: var(--lh-snug); }
+
+p { margin: 0 0 var(--space-4); text-wrap: pretty; }
+
+a { color: var(--color-link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Brand eyebrow / overline label */
+.twk-overline {
+  font-family: var(--font-body);
+  font-size: var(--fs-overline);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-overline);
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+/* Utility: uppercase display lockup like the wordmark */
+.twk-display {
+  font: var(--text-display);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-tight);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}

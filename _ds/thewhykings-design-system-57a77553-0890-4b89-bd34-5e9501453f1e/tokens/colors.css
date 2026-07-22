@@ -1,0 +1,104 @@
+/* theWHYKINGS — Color tokens
+   Primärfarben (primary) + Sekundärfarben (secondary), plus tints/shades
+   derived for UI use (surfaces, borders, hovers). */
+
+:root {
+  /* ---- Brand primaries (raw) ---- */
+  --twk-sage:        #81a28d;  /* Salbeigrün  — signature primary */
+  --twk-gold:        #b79f63;  /* Golden Beige — premium accent   */
+  --twk-black:       #000000;  /* Schwarz                          */
+  --twk-graphite:    #181818;  /* Grau-schwarz — near-black ground */
+  --twk-white:       #ffffff;  /* Leuchtend Weiß                   */
+
+  /* ---- Brand secondaries (raw) ---- */
+  --twk-terracotta:  #a26c5e;  /* Terrakotta-Rot */
+  --twk-slate:       #637ba2;  /* Slate-Blau     */
+
+  /* ---- Sage scale ---- */
+  --sage-50:  #f1f5f2;
+  --sage-100: #dde7e1;
+  --sage-200: #c2d2c8;
+  --sage-300: #a3bcac;
+  --sage-400: #81a28d;   /* base */
+  --sage-500: #6b8c78;
+  --sage-600: #577262;
+  --sage-700: #45594d;
+  --sage-800: #36463c;
+
+  /* ---- Gold scale ---- */
+  --gold-50:  #f7f3e9;
+  --gold-100: #ece2c8;
+  --gold-200: #ddcc9d;
+  --gold-300: #c9b27f;
+  --gold-400: #b79f63;   /* base */
+  --gold-500: #9e8650;
+  --gold-600: #806b3f;
+  --gold-700: #615131;
+  --gold-800: #443923;
+
+  /* ---- Neutral / graphite scale ---- */
+  --neutral-0:   #ffffff;
+  --neutral-50:  #f6f6f5;
+  --neutral-100: #ededec;
+  --neutral-200: #dededc;
+  --neutral-300: #bcbcb9;
+  --neutral-400: #8f8f8c;
+  --neutral-500: #66665f;
+  --neutral-600: #44443f;
+  --neutral-700: #2a2a27;
+  --neutral-800: #181818;   /* graphite */
+  --neutral-900: #000000;   /* black */
+
+  /* ---- Secondary scales (lighter tints for surfaces) ---- */
+  --terracotta-100: #efe0db;
+  --terracotta-300: #c79c90;
+  --terracotta-500: #a26c5e;
+  --terracotta-700: #7a4f44;
+
+  --slate-100: #dde3ee;
+  --slate-300: #9fb0cb;
+  --slate-500: #637ba2;
+  --slate-700: #485c7c;
+
+  /* ---- Semantic aliases ---- */
+  --color-bg:            var(--neutral-0);
+  --color-bg-subtle:     var(--neutral-50);
+  --color-bg-sunken:     var(--neutral-100);
+  --color-bg-inverse:    var(--neutral-800);
+  --color-bg-inverse-deep: var(--neutral-900);
+
+  --surface-card:        var(--neutral-0);
+  --surface-card-alt:    var(--sage-50);
+  --surface-overlay:     rgba(24, 24, 24, 0.55);
+
+  --color-fg:            var(--neutral-800);
+  --color-fg-muted:      var(--neutral-500);
+  --color-fg-subtle:     var(--neutral-400);
+  --color-fg-on-dark:    var(--neutral-0);
+  --color-fg-on-accent:  var(--neutral-0);
+
+  --color-border:        var(--neutral-200);
+  --color-border-strong: var(--neutral-300);
+  --color-border-inverse: rgba(255, 255, 255, 0.16);
+
+  --color-accent:        var(--sage-400);
+  --color-accent-hover:  var(--sage-500);
+  --color-accent-press:  var(--sage-600);
+  --color-accent-soft:   var(--sage-50);
+
+  --color-gold:          var(--gold-400);
+  --color-gold-hover:    var(--gold-500);
+  --color-gold-soft:     var(--gold-50);
+
+  --color-link:          var(--sage-600);
+
+  /* status (kept on-brand: terracotta = caution/error, sage = success) */
+  --color-success:       var(--sage-500);
+  --color-success-soft:  var(--sage-50);
+  --color-danger:        var(--terracotta-500);
+  --color-danger-soft:   var(--terracotta-100);
+  --color-info:          var(--slate-500);
+  --color-info-soft:     var(--slate-100);
+
+  --color-focus-ring:    var(--gold-400);
+}

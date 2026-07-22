@@ -1,0 +1,50 @@
+/* theWHYKINGS — Typography tokens
+   Display voice: Jost (geometric, matches the wordmark).
+   UI / body voice: Albert Sans (humanist, clean, legible).
+   Brand wordmark & headlines lean uppercase + tight tracking. */
+
+:root {
+  /* Families */
+  --font-display: 'Jost', system-ui, sans-serif;
+  --font-body:    'Albert Sans', system-ui, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Weights */
+  --fw-regular:   400; /* @kind font */
+  --fw-medium:    500; /* @kind font */
+  --fw-semibold:  600; /* @kind font */
+  --fw-bold:      700; /* @kind font */
+
+  /* Type scale (1.25 major-third-ish, tuned) — 48–80, 48, 36, 28, 22, 20, 16, 14, 12 */
+  --fs-display:   clamp(3rem, 6vw, 5rem); /* @kind font */
+  --fs-h1:        3rem; /* @kind font */
+  --fs-h2:        2.25rem; /* @kind font */
+  --fs-h3:        1.75rem; /* @kind font */
+  --fs-h4:        1.375rem; /* @kind font */
+  --fs-lead:      1.25rem; /* @kind font */
+  --fs-body:      1rem; /* @kind font */
+  --fs-sm:        0.875rem; /* @kind font */
+  --fs-xs:        0.75rem; /* @kind font */
+  --fs-overline:  0.75rem; /* @kind font */
+
+  /* Line heights */
+  --lh-tight:     1.05; /* @kind font */
+  --lh-snug:      1.2; /* @kind font */
+  --lh-normal:    1.5; /* @kind font */
+  --lh-relaxed:   1.65; /* @kind font */
+
+  /* Letter spacing */
+  --ls-tight:     -0.02em; /* @kind font */
+  --ls-normal:    0; /* @kind font */
+  --ls-wide:      0.04em; /* @kind font */
+  --ls-overline:  0.18em; /* @kind font */
+
+  /* Semantic roles */
+  --text-display:  var(--fw-bold)    var(--fs-display)/var(--lh-tight) var(--font-display);
+  --text-h1:       var(--fw-bold)    var(--fs-h1)/var(--lh-tight)      var(--font-display);
+  --text-h2:       var(--fw-semibold) var(--fs-h2)/var(--lh-snug)      var(--font-display);
+  --text-h3:       var(--fw-semibold) var(--fs-h3)/var(--lh-snug)      var(--font-display);
+  --text-body:     var(--fw-regular) var(--fs-body)/var(--lh-relaxed)  var(--font-body);
+  --text-lead:     var(--fw-regular) var(--fs-lead)/var(--lh-normal)   var(--font-body);
+  --text-sm:       var(--fw-regular) var(--fs-sm)/var(--lh-normal)     var(--font-body);
+}
