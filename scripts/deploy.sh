@@ -47,6 +47,14 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 echo "Pushing to GitHub…"
 git push -q origin main
 
+# GitHub Pages does not reliably start a build on push for this repo (observed
+# twice on 2026-07-23: the commit lands, no build is queued, the live site keeps
+# serving the previous version). Ask for one explicitly — harmless if Pages
+# already queued its own.
+echo "Requesting a Pages build…"
+gh api -X POST repos/theWHYKINGS/academy/pages/builds --jq '.status' || \
+  echo "  ! could not request a build — check https://github.com/theWHYKINGS/academy/settings/pages"
+
 echo
 echo "✅ Pushed. GitHub Pages will rebuild in ~1 minute."
 echo "   Live:  https://www.thewhykingsacademy.com"
