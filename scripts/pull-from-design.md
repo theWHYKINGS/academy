@@ -7,9 +7,23 @@ Claude runs — you just say **"deploy"**.
 ## Project
 
 - **Project ID:** `e696e06a-4026-4306-a498-ef6b7d67bbd9`
-- **Entry file:** `Academy Redesign.dc.html` → published as `index.html`
+- **Entry file:** the single top-level **`*.dc.html`** → published as `index.html`
 - **API base:** `https://claude.ai/design/anthropic.omelette.api.v1alpha.OmeletteService/`
 - **Auth:** claude.ai session cookies (same-origin fetch from an open claude.ai tab)
+
+## ⚠️ Which file is the source?
+
+`ListFiles` first, then pick by rule — the entry file has already been renamed
+once (`Academy Redesign.dc.html` → `Academy Deploy.dc.html` → back again), so
+never assume a name:
+
+- **Use** the top-level `*.dc.html` — that's the editable design source.
+- **Never** publish `theWHYKINGS Academy.html` (~1.4 MB, `<title>Bundled Page</title>`).
+  That's the offline export, which lags behind the source.
+- **If more than one `.dc.html` exists** (e.g. a copy, or a "Hero Layout Optionen"
+  variant), stop and ask which one is canonical — publishing the wrong copy ships
+  changes Dominik didn't make. As of 2026-07-23 he cleaned the project up so only
+  one remains.
 
 ## We host the SOURCE, not the offline export
 

@@ -37,8 +37,15 @@ data = json.loads(src.read_text(encoding="utf-8"))
 # and a fixed name would silently publish a stale index.html. The entry is the
 # only top-level .html in the bundle; everything else lives in a subfolder.
 entries = [p for p in data if p.lower().endswith(".html") and "/" not in p]
+if len(entries) > 1:
+    # The project also holds the offline export ("theWHYKINGS Academy.html",
+    # ~1.4 MB, <title>Bundled Page</title>) which we must never publish — the
+    # editable source is the .dc.html one.
+    dc = [p for p in entries if p.lower().endswith(".dc.html")]
+    if len(dc) == 1:
+        entries = dc
 if len(entries) != 1:
-    raise SystemExit(f"Expected exactly one top-level .html in the bundle, got: {entries}")
+    raise SystemExit(f"Expected exactly one source .html in the bundle, got: {entries}")
 RENAME = {entries[0]: "index.html"}
 print(f"entry: {entries[0]} -> index.html")
 
