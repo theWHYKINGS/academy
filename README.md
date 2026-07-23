@@ -21,8 +21,17 @@ See [scripts/pull-from-design.md](scripts/pull-from-design.md) for the details.
 
 ```bash
 python3 scripts/unpack_code.py              # newest ~/Downloads/ak_code*.json -> repo
-scripts/deploy.sh "describe what changed"   # build_legal + commit + push
+scripts/deploy.sh "describe what changed"   # localize + build_legal + inject + commit + push
 ```
+
+## No third-party requests
+
+The design source loads webfonts from Google and React/Babel from unpkg. Both are
+vendored here, and `scripts/localize_assets.py` rewrites the pulled files to point
+at the local copies on every deploy — so a visit to the site contacts nothing but
+its own domain. The vendored JS is byte-identical to unpkg's (checked against the
+SRI hashes `support.js` declares: `python3 scripts/localize_assets.py --check`).
+Keep it that way: the Datenschutzerklärung states there are no third-party requests.
 
 ## Layout
 
@@ -30,7 +39,8 @@ scripts/deploy.sh "describe what changed"   # build_legal + commit + push
 |---|---|
 | `index.html` | the page — the Claude Design source `Academy Redesign.dc.html`, renamed |
 | `support.js`, `_ds/` | its code + design-system dependencies (pulled, never hand-edited) |
-| `assets/` | images referenced by the page (helm, wordmark, client logos) |
+| `assets/` | images referenced by the page (helm, wordmark, client logos) + `fonts/` |
+| `vendor/` | self-hosted third-party assets: webfont CSS, React, React-DOM, Babel — so the page contacts **no** external host |
 | `legal/` | built Impressum + Datenschutz (generated — edit `src/legal/` instead) |
 | `src/legal/` | legal page sources + `legal.css` |
 | `scripts/` | pull / build / deploy tooling |
