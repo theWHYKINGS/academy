@@ -27,6 +27,8 @@ echo "Building legal pages…"
 python3 scripts/build_legal.py
 echo "Injecting title / favicons / footer links…"
 python3 scripts/inject_head.py
+echo "Ensuring enhance.js is loaded by index.html…"
+python3 scripts/inject_enhance.py
 
 if [ -z "$(git status --porcelain)" ]; then
   echo "Nothing changed — working tree is clean. Nothing to deploy."
