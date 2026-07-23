@@ -74,6 +74,44 @@ Images live under `assets/` and are committed. Re-pull only if a local render
 shows broken images: bundle-fetch them as `ak_images.json`, then
 `python3 scripts/unpack_images.py`.
 
+## Pushing legal pages BACK into Claude Design
+
+The repo is the source of truth for the legal texts, but Dominik wants the same
+state visible inside the design project. After a deploy that touched them, copy
+the built pages back into `legal/` there.
+
+The write endpoint is **undocumented** and is a *client-streaming* Connect call:
+`UploadFile` rejects plain JSON with 415. It wants `Content-Type:
+application/connect+json` and length-prefixed frames (5-byte envelope: 1 flag
+byte + 4-byte big-endian length), **first** a meta frame, **then** a data frame:
+
+```js
+const frame = (o) => { const j = new TextEncoder().encode(JSON.stringify(o));
+  const b = new Uint8Array(5 + j.length); b[0] = 0;
+  new DataView(b.buffer).setUint32(1, j.length, false); b.set(j, 5); return b; };
+
+await fetch(BASE + 'UploadFile', { method:'POST', credentials:'include',
+  headers: {'Content-Type':'application/connect+json','Connect-Protocol-Version':'1'},
+  body: new Blob([ frame({meta:{projectId: PID, path:'legal/Impressum.html'}}),
+                   frame({data: base64OfFileBytes}) ]) });
+// -> {"path":"legal/Impressum.html","size":"9462"}
+```
+
+Fetch the file bytes straight from the live site inside the browser —
+GitHub Pages sends `access-control-allow-origin: *`, so no need to pipe
+kilobytes of HTML through the tool call.
+
+Keep them in the **`legal/` subfolder**: files at the top level would collide
+with the "single top-level .html is the entry" rule in `unpack_code.py`.
+
+`DeleteFile` (plain JSON, `{projectId, path}`) removes a file again — useful to
+clean up after probing.
+
+**Verifying the round-trip:** `GetFile` returns the file with the omelette
+preview harness injected, so the read-back is always bigger than what was
+stored. Strip `<style|script data-omelette-injected>` before comparing, or the
+sizes will look wrong.
+
 ## Legal pages
 
 `src/legal/` holds the Impressum/Datenschutz sources (copied from the main site);
