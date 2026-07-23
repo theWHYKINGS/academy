@@ -19,12 +19,33 @@
   var WEB3FORMS_KEY = '86e85b45-d5c0-425c-ad02-0277510fd4b6';
   var SUBJECT = 'Neue Infocall-Anfrage — Academy';
 
-  var COURSES = [
+  // Fallback only — the real list is read off the rendered Kurskatalog, so new
+  // or renamed trainings show up in the dropdown without touching this file.
+  var COURSES_FALLBACK = [
     'Beidhändig Führen',
     'Leadership Essentials',
-    'Product Leadership',
-    'Noch unentschlossen / allgemeine Beratung'
+    'Product Leadership'
   ];
+  var UNDECIDED = 'Noch unentschlossen / allgemeine Beratung';
+
+  // Course titles in the catalog aren't uniformly tagged (h3 for the featured
+  // one, plain divs in the cards), so match on rendered typography instead:
+  // leaf elements at heading weight/size, without a price or a date in them.
+  function readCourses() {
+    var cat = document.getElementById('kurskatalog');
+    if (!cat) return null;
+    var found = [];
+    cat.querySelectorAll('*').forEach(function (el) {
+      if (el.children.length) return;
+      var t = (el.textContent || '').trim();
+      if (t.length < 4 || t.length > 48 || /[€\d]/.test(t)) return;
+      var cs = getComputedStyle(el);
+      var fs = parseFloat(cs.fontSize);
+      var fw = parseInt(cs.fontWeight, 10);
+      if (fs >= 17 && fs <= 26 && fw >= 600 && found.indexOf(t) < 0) found.push(t);
+    });
+    return found.length >= 2 ? found : null;
+  }
 
   var done = { section: false, footer: false };
 
@@ -91,7 +112,7 @@
 
     injectStyles();
 
-    var opts = COURSES.map(function (c) {
+    var opts = (readCourses() || COURSES_FALLBACK).concat([UNDECIDED]).map(function (c) {
       return '<option value="' + esc(c) + '">' + esc(c) + '</option>';
     }).join('');
 

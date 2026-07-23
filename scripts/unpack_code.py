@@ -30,9 +30,18 @@ else:
     src = matches[-1]
 print(f"reading {src.name}")
 
-RENAME = {"Academy Redesign.dc.html": "index.html"}
-
 data = json.loads(src.read_text(encoding="utf-8"))
+
+# The entry file gets renamed to index.html. Do NOT hardcode its name — it has
+# already changed once ("Academy Redesign.dc.html" -> "Academy Deploy.dc.html")
+# and a fixed name would silently publish a stale index.html. The entry is the
+# only top-level .html in the bundle; everything else lives in a subfolder.
+entries = [p for p in data if p.lower().endswith(".html") and "/" not in p]
+if len(entries) != 1:
+    raise SystemExit(f"Expected exactly one top-level .html in the bundle, got: {entries}")
+RENAME = {entries[0]: "index.html"}
+print(f"entry: {entries[0]} -> index.html")
+
 count = 0
 for rel, obj in data.items():
     out = RENAME.get(rel, rel)
