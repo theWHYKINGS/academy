@@ -4,4 +4,4 @@
    binaries, request the licensed .woff2 files and swap these @import lines
    for local @font-face rules. */
 
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Albert+Sans:wght@400;500;600;700&display=swap');
+@import url('../../../vendor/fonts-local.css');

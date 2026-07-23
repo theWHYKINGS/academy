@@ -23,6 +23,8 @@ export PATH="$HOME/.local/bin:$PATH"   # local gh install
 MSG="${1:-Update site — $(date '+%Y-%m-%d %H:%M')}"
 
 # --- post-process the fresh source before publishing ---
+echo "Pointing fonts + React/Babel at local copies…"
+python3 scripts/localize_assets.py
 echo "Building legal pages…"
 python3 scripts/build_legal.py
 echo "Injecting title / favicons / footer links…"
