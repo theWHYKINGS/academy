@@ -11,6 +11,15 @@ Claude runs — you just say **"deploy"**.
 - **API base:** `https://claude.ai/design/anthropic.omelette.api.v1alpha.OmeletteService/`
 - **Auth:** claude.ai session cookies (same-origin fetch from an open claude.ai tab)
 
+## Multi-page: pull EVERY page in pages.py
+
+The site is multi-page (homepage + training detail pages). `scripts/pages.py`
+lists each design source file → output path → URL. When pulling, bundle **all**
+of those source files plus the shared deps into one `ak_code.json` (keys are the
+raw design filenames; `unpack_code.py` renames/rewrites them). Do NOT pull only
+the homepage — the detail pages would go stale. Scaffold/template `.dc.html`
+files and the offline export are NOT in pages.py and must not be pulled/published.
+
 ## ⚠️ Which file is the source?
 
 `ListFiles` first, then pick by rule — the entry file has already been renamed
