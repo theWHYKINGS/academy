@@ -91,8 +91,11 @@ def main() -> int:
             return 1
         for url, (rel, _) in UNPKG.items():
             if url in s:
-                s = s.replace(url, rel)
-                changed.append(f"support.js → {rel}")
+                # root-absolute: support.js is loaded from /support.js but any
+                # relative ref inside it resolves against the *page* URL, which
+                # on a /slug/ detail page would 404. /vendor/… works everywhere.
+                s = s.replace(url, "/" + rel)
+                changed.append(f"support.js → /{rel}")
         for url in re.findall(r"https://unpkg\.com/[^\"'\s)]+", s):
             print(f"  ! support.js still points at an unknown CDN file: {url}")
         support.write_text(s, encoding="utf-8")
