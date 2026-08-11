@@ -24,6 +24,18 @@ root = Path(__file__).resolve().parent.parent
 
 BEGIN, END = "<!-- injected-head:begin -->", "<!-- injected-head:end -->"
 
+# Plausible Analytics — cookieless, EU-hosted. Academy-specific snippet (its own
+# pa-*.js id). Sits inside the idempotent head block so it lands on every page
+# and survives each Claude Design pull. Disclosed in the Datenschutzerklärung.
+PLAUSIBLE = (
+    '<!-- Privacy-friendly analytics by Plausible -->\n'
+    '<script async src="https://plausible.io/js/pa-KmKUwU1dOb0-C6FpN-4zN.js"></script>\n'
+    '<script>\n'
+    '  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};\n'
+    '  plausible.init()\n'
+    '</script>'
+)
+
 
 def head_block(page):
     url = SITE + page["url"]
@@ -42,6 +54,7 @@ def head_block(page):
 <meta property="og:url" content="{url}" />
 <meta property="og:image" content="{SITE}/assets/wordmark-green.png" />
 <meta name="twitter:card" content="summary_large_image" />
+{PLAUSIBLE}
 {END}
 """
 
