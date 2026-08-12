@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from pages import PAGES, absolutize_assets, rewrite_links   # noqa: E402
+from pages import PAGES, absolutize_assets, rewrite_links, strip_editor_runtime   # noqa: E402
 
 root = Path(__file__).resolve().parent.parent
 
@@ -54,6 +54,7 @@ for rel, obj in data.items():
         html = raw.decode("utf-8")
         html = absolutize_assets(html)
         html = rewrite_links(html)
+        html = strip_editor_runtime(html)
         dest = (root / out).resolve()
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(html, encoding="utf-8")

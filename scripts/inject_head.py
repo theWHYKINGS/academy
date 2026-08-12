@@ -37,6 +37,19 @@ PLAUSIBLE = (
 )
 
 
+# Claude Design's <image-slot> web component renders via image-slot.js, which we
+# strip (it fetches from unsplash — see pages.strip_editor_runtime). A slot that
+# still has no image is therefore empty; collapse its column so unfilled slots
+# leave no blank gap. The moment a photo is placed in Design the slot is no longer
+# :empty, so the column reappears on the next deploy — no code change needed.
+SLOTFIX = (
+    '<style data-twk-slotfix>'
+    'image-slot:empty{display:none!important}'
+    ':where(div):has(> image-slot:empty){display:none!important}'
+    '</style>'
+)
+
+
 def head_block(page):
     url = SITE + page["url"]
     return f"""{BEGIN}
@@ -54,6 +67,7 @@ def head_block(page):
 <meta property="og:url" content="{url}" />
 <meta property="og:image" content="{SITE}/assets/wordmark-green.png" />
 <meta name="twitter:card" content="summary_large_image" />
+{SLOTFIX}
 {PLAUSIBLE}
 {END}
 """

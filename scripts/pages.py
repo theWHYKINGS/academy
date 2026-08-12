@@ -18,7 +18,7 @@ SITE = "https://www.thewhykingsacademy.com"
 # order matters only for logging; `out` is the repo path, `url` the public path
 PAGES = [
     {
-        "src": "Academy Redesign.dc.html",
+        "src": "ACADEMY | HOME.dc.html",
         "out": "index.html",
         "url": "/",
         "title": "the WHYKINGS ACADEMY — Leadership-Trainings ohne Seminar-Hangover",
@@ -26,19 +26,11 @@ PAGES = [
                  "ohne Seminar-Hangover. Kurskatalog, Formate und Kontakt."),
     },
     {
-        "src": "Die fünf Gespräche.dc.html",
+        "src": "trainings/Die fünf Gespräche.dc.html",
         "out": "die-fuenf-gespraeche/index.html",
         "url": "/die-fuenf-gespraeche/",
         "title": "Die fünf Gespräche — the WHYKINGS ACADEMY",
         "desc": ("Führungstraining „Die fünf Gespräche“ der WHYKINGS Academy: "
-                 "Inhalte, Termine und Anmeldung."),
-    },
-    {
-        "src": "Die erste Führungsrolle.dc.html",
-        "out": "die-erste-fuehrungsrolle/index.html",
-        "url": "/die-erste-fuehrungsrolle/",
-        "title": "Die erste Führungsrolle — the WHYKINGS ACADEMY",
-        "desc": ("Führungstraining „Die erste Führungsrolle“ der WHYKINGS Academy: "
                  "Inhalte, Termine und Anmeldung."),
     },
 ]
@@ -83,3 +75,19 @@ _ASSET_ATTR = re.compile(
 
 def absolutize_assets(html):
     return _ASSET_ATTR.sub(lambda m: f"{m.group(1)}/{m.group(2)}{m.group(3)}", html)
+
+
+# --- strip Claude Design's editor-only runtime ---------------------------------
+# `image-slot.js` is the in-editor image-picker (it fetches from unsplash.com).
+# The published pages already carry concrete <img src="assets/…"> for every slot,
+# so the script does nothing useful when hosted standalone — and shipping it would
+# break the Datenschutz promise that the site makes no third-party requests. Drop
+# any <script> that loads it (in whatever relative/absolute form the export uses).
+_EDITOR_SCRIPT = re.compile(
+    r'\s*<script\b[^>]*\bsrc="[^"]*image-slot\.js"[^>]*>\s*</script>',
+    re.IGNORECASE,
+)
+
+
+def strip_editor_runtime(html):
+    return _EDITOR_SCRIPT.sub("", html)
