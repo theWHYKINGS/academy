@@ -102,6 +102,13 @@ def process(page):
         if n:
             changed.append(label)
 
+    # header "→ thewhykings.com" button (desktop + mobile-menu copies) points at
+    # "#top" in the design; send it to the main WHYKINGS site instead.
+    html, n = re.subn(r'href="#top"(?=[^>]*>[^<]*thewhykings\.com</a>)',
+                      'href="https://www.thewhykings.com"', html)
+    if n:
+        changed.append(f"whykings-link×{n}")
+
     path.write_text(html, encoding="utf-8")
     return changed
 
