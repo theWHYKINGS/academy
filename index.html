@@ -183,6 +183,7 @@ a:hover{text-decoration:none}
     <div style="width:56px;height:3px;background:var(--sage-400);margin:0 0 24px"></div>
 
     <div style="background:#fff;border:1px solid var(--neutral-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);overflow:hidden;{{ panelDirStyle }}">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
       <div style="{{ sidebarStyle }}">
         <div style="font-family:var(--font-body);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-600);margin-bottom:10px;flex:none">Format</div>
         <div onClick="{{ selectFormatAlle }}" style="{{ navAlleStyle }}"><span>Alle Trainings</span><span style="opacity:.6;font-weight:500">{{ countAll }}</span></div>
@@ -190,7 +191,6 @@ a:hover{text-decoration:none}
         <div onClick="{{ selectFormatI }}" style="{{ navIStyle }}"><span>Intensivtraining</span><span style="opacity:.6;font-weight:500">{{ countI }}</span></div>
         <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
           <div style="margin-top:auto;padding-top:20px;display:flex;flex-direction:column;gap:8px">
-            <div style="font-family:var(--font-body);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-600);margin-bottom:2px">Level</div>
             <div style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:99px;background:#81a28d;flex:none"></span><span style="font-size:12px;color:var(--neutral-500)">Neu in Führung</span></div>
             <div style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:99px;background:#637ba2;flex:none"></span><span style="font-size:12px;color:var(--neutral-500)">Erfahrene Führungskraft</span></div>
             <div style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:99px;background:#a26c5e;flex:none"></span><span style="font-size:12px;color:var(--neutral-500)">Senior Leader / Executive</span></div>
@@ -198,8 +198,31 @@ a:hover{text-decoration:none}
           </div>
         </sc-if>
       </div>
+      </sc-if>
+
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:none;display:flex;flex-direction:column;gap:14px;padding:16px;border-bottom:1px solid var(--neutral-200);background:var(--neutral-50)">
+          <div style="display:flex;gap:3px;padding:3px;background:var(--neutral-100);border-radius:var(--radius-sm)">
+            <div onClick="{{ selectFormatAlle }}" style="{{ segAlleStyle }}">Alle <span style="opacity:.55;font-weight:500">{{ countAll }}</span></div>
+            <div onClick="{{ selectFormatK }}" style="{{ segKStyle }}">Kompakt <span style="opacity:.55;font-weight:500">{{ countK }}</span></div>
+            <div onClick="{{ selectFormatI }}" style="{{ segIStyle }}">Intensiv <span style="opacity:.55;font-weight:500">{{ countI }}</span></div>
+          </div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+            <span style="font-family:var(--font-body);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-600)">Level</span>
+            <span style="font-size:12.5px;color:var(--neutral-400)">{{ shownCount }} Trainings</span>
+          </div>
+          <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 2px">
+            <div onClick="{{ selectLevelAlle }}" style="{{ lvlAlleStyle }}">Alle Levels</div>
+            <div onClick="{{ selectLevel1 }}" style="{{ lvl1Style }}">Neu in Führung</div>
+            <div onClick="{{ selectLevel2 }}" style="{{ lvl2Style }}">Erfahrene Führungskraft</div>
+            <div onClick="{{ selectLevel3 }}" style="{{ lvl3Style }}">Senior Leader</div>
+            <div onClick="{{ selectLevel4 }}" style="{{ lvl4Style }}">Fachliche Führung</div>
+          </div>
+        </div>
+      </sc-if>
 
       <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
         <div style="{{ toolbarRowStyle }}">
           <div onClick="{{ selectLevelAlle }}" style="{{ lvlAlleStyle }}">Alle Levels</div>
           <div onClick="{{ selectLevel1 }}" style="{{ lvl1Style }}">Neu in Führung</div>
@@ -208,9 +231,10 @@ a:hover{text-decoration:none}
           <div onClick="{{ selectLevel4 }}" style="{{ lvl4Style }}">Fachliche Führung</div>
           <span style="margin-left:auto;flex:none;font-size:12.5px;color:var(--neutral-400);align-self:center;white-space:nowrap">{{ shownCount }} Trainings</span>
         </div>
+        </sc-if>
 
-        <div style="padding:24px;display:flex;flex-direction:column;gap:24px">
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px">
+        <div style="{{ cardPadStyle }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:16px">
             <sc-for list="{{ filteredLive }}" as="item" hint-placeholder-count="4">
               <div style="background:#fff;border:1px solid var(--neutral-200);border-top:3px solid {{ item.borderColor }};border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:22px 24px;display:flex;flex-direction:column;gap:10px" style-hover="box-shadow:var(--shadow-md);transform:translateY(-2px)">
                 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
@@ -403,8 +427,9 @@ class Component extends DCLogic {
       ? `display:inline-flex;align-items:center;gap:7px;padding:8px 16px;min-height:${mobilePanel ? 44 : 34}px;box-sizing:border-box;border-radius:999px;background:${color};color:#fff;font-family:var(--font-body);font-weight:600;font-size:12.5px;white-space:nowrap;cursor:pointer;flex:none`
       : `display:inline-flex;align-items:center;gap:7px;padding:8px 16px;min-height:${mobilePanel ? 44 : 34}px;box-sizing:border-box;border-radius:999px;background:var(--neutral-100);color:var(--neutral-500);font-family:var(--font-body);font-weight:500;font-size:12.5px;white-space:nowrap;cursor:pointer;flex:none`;
 
-    const all = [...this.liveTrainings, ...this.comingSoon];
-    const countAll = all.length;
+    const segStyle = (active) => `flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:0 8px;border-radius:2px;font-family:var(--font-body);font-weight:600;font-size:13.5px;white-space:nowrap;cursor:pointer;background:${active ? '#181818' : 'transparent'};color:${active ? '#fff' : 'var(--neutral-500)'};transition:background var(--dur-base) var(--ease-standard)`;
+
+    const all = [...this.liveTrainings, ...this.comingSoon];    const countAll = all.length;
     const countK = all.filter(t => t.format === 'K').length;
     const countI = all.filter(t => t.format === 'I').length;
     const countE = all.filter(t => t.format === 'E').length;
@@ -438,6 +463,12 @@ class Component extends DCLogic {
         ? 'display:flex;gap:8px;width:100%;margin-top:4px'
         : 'display:flex;gap:8px;margin-left:auto',
       cardBtnStyle: mobilePanel ? 'min-height:44px;flex:1' : '',
+      cardPadStyle: mobilePanel
+        ? 'padding:16px;display:flex;flex-direction:column;gap:24px'
+        : 'padding:24px;display:flex;flex-direction:column;gap:24px',
+      segAlleStyle: segStyle(fmt === 'Alle'),
+      segKStyle: segStyle(fmt === 'K'),
+      segIStyle: segStyle(fmt === 'I'),
       cardBtnSize: mobilePanel ? 'md' : 'sm',
       cardBtnFull: mobilePanel,
       cardLinkStyle: mobilePanel ? 'display:flex;flex:1' : 'display:flex',
