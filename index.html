@@ -270,10 +270,13 @@ a:hover{text-decoration:none}
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:16px">
             <sc-for list="{{ filteredLive }}" as="item" hint-placeholder-count="4">
               <div style="background:#fff;border:1px solid var(--neutral-200);border-top:3px solid {{ item.borderColor }};border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:22px 24px;display:flex;flex-direction:column;gap:10px" style-hover="box-shadow:var(--shadow-md);transform:translateY(-2px)">
-                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
-                  <span style="font-family:var(--font-display);font-weight:700;font-size:13px;letter-spacing:.02em;color:{{ item.borderColor }}">{{ item.code }}</span>
-                  <x-import component-from-global-scope="TheWHYKINGSDesignSystem_57a775.Badge" tone="{{ item.levelTone }}" hint-size="auto,22px">{{ item.levelLabel }}</x-import>
-                  <span style="font-size:12px;color:var(--neutral-400)">{{ item.formatLabel }}</span>
+                <div style="display:flex;align-items:flex-start;gap:12px">
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex:1;min-width:0">
+                    <span style="font-family:var(--font-display);font-weight:700;font-size:13px;letter-spacing:.02em;color:{{ item.borderColor }}">{{ item.code }}</span>
+                    <x-import component-from-global-scope="TheWHYKINGSDesignSystem_57a775.Badge" tone="{{ item.levelTone }}" hint-size="auto,22px">{{ item.levelLabel }}</x-import>
+                    <span style="font-size:12px;color:var(--neutral-400)">{{ item.formatLabel }}</span>
+                  </div>
+                  <span aria-hidden="true" data-training-glyph style="display:flex;align-items:center;justify-content:center;width:60px;height:60px;flex:none;background:#181818;border-radius:2px"><svg viewBox="0 0 24 24" width="42" height="42" style="display:block;flex:none"><sc-for list="{{ item.glyph }}" as="r" hint-placeholder-count="4"><rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.f }}"></rect></sc-for></svg></span>
                 </div>
                 <h3 style="font-family:var(--font-display);font-weight:700;font-size:21px;line-height:1.2;margin:0;color:var(--color-fg)">{{ item.title }}</h3>
                 <p style="font-size:14.5px;line-height:1.5;color:var(--color-fg-muted);margin:0;text-wrap:pretty">{{ item.desc }}</p>
@@ -373,6 +376,43 @@ class Component extends DCLogic {
     3: { levelLabel: 'Senior Leader / Executive', levelTone: 'danger', borderColor: '#a26c5e' },
     4: { levelLabel: 'Fachliche Führung', levelTone: 'neutral', borderColor: '#765f7a' }
   };
+
+  // Trainings-Glyphen aus dem Katalog 2026 (x y w h farbe; s=sage w=weiss b=slate t=terrakotta a=aubergine)
+  glyphSrc = {
+    K1:'3 3.9 12 2.2 s|12 7.4 9 2.2 w|3 10.9 12 2.2 s|12 14.4 9 2.2 w|3 17.9 12 2.2 s',
+    K2:'17.4 7.4 3.6 2.2 s|18.85 9.6 0.7 8.3 s|3 17.9 3.6 2.2 w|7.8 17.9 3.6 2.2 w|12.6 17.9 3.6 2.2 w',
+    K3:'3 3 2.2 18 s|6.8 7.4 14.2 2.2 w|6.8 10.9 14.2 2.2 w|6.8 14.4 14.2 2.2 w',
+    K4:'3 7.4 18 2.2 b|3 10.9 8.2 2.2 w|12.8 10.9 8.2 2.2 w|3 14.4 18 2.2 b',
+    K5:'3 5.65 18 2.2 w|8.4 9.15 7.2 2.2 b|8.4 12.65 7.2 2.2 b|3 16.15 18 2.2 w',
+    K6:'3 3.9 18 2.2 w|11.65 6.1 0.7 4.8 w|3 10.9 9 2.2 b|7.5 14.4 9 2.2 b|12 17.9 9 2.2 b',
+    K7:'3 6.4 7.6 2.2 b|13.4 6.4 7.6 2.2 b|3 11.65 18 0.7 w|3 15.4 7.6 2.2 b|13.4 15.4 7.6 2.2 b',
+    K8:'7.5 5.65 9 2.2 t|11.65 7.85 0.7 3.65 w|6.5 11.5 11 0.7 w|6.5 12.2 0.7 2.3 w|16.8 12.2 0.7 2.3 w|3.35 14.5 7 2.2 t|13.65 14.5 7 2.2 t',
+    K9:'3 5.65 3.6 2.2 w|7.8 5.65 3.6 2.2 w|12.6 5.65 3.6 2.2 t|17.4 5.65 3.6 2.2 w|14.05 7.85 0.7 8.3 t|3 16.15 18 2.2 t',
+    K10:'3 3.9 9 2.2 s|3 7.4 13 2.2 w|3 10.9 9 2.2 s|3 14.4 13 2.2 w|18.3 3.9 0.7 12.7 w',
+    K11:'3 3.9 16.5 2.2 w|3 7.4 16.5 2.2 w|3 10.9 7.2 2.2 b|3 14.4 16.5 2.2 w|20.3 3.9 0.7 12.7 b',
+    K12:'3 5.65 7.2 2.2 b|13.8 5.65 7.2 2.2 w|3 9.15 7.2 2.2 w|13.8 9.15 7.2 2.2 b|11.65 5.65 0.7 5.7 w|3 14.4 18 2.2 b',
+    K13:'3 3.9 18 2.2 w|18.15 6.1 0.7 4.8 w|16 10.9 5 2.2 b|9.5 14.4 6 2.2 b|3 17.9 6 2.2 b',
+    K14:'3 5.65 8.2 2.2 t|12.8 5.65 8.2 2.2 w|6.85 7.85 0.7 3.65 w|16.55 7.85 0.7 3.65 w|3 11.5 18 0.7 w|3 14.5 18 2.2 t',
+    I1:'3 5.65 3.4 2.2 s|7.6 5.65 13.4 2.2 w|3 9.15 7.4 2.2 s|11.6 9.15 9.4 2.2 w|3 12.65 11.4 2.2 s|15.6 12.65 5.4 2.2 w|3 16.15 15.4 2.2 s|19.6 16.15 1.4 2.2 w',
+    I2:'3 5.65 10.6 2.2 b|14.8 5.65 6.2 2.2 w|3 9.15 6.2 2.2 b|10.4 9.15 10.6 2.2 w|3 12.65 10.6 2.2 b|14.8 12.65 6.2 2.2 w|3 16.15 6.2 2.2 b|10.4 16.15 10.6 2.2 w',
+    I3:'3 4.5 18 2.2 a|3 10 5 2.2 a|9.5 10 5 2.2 a|16 10 5 2.2 a|5.15 12.2 0.7 3.3 w|11.65 12.2 0.7 3.3 w|18.15 12.2 0.7 3.3 w|3 15.5 18 2.2 w',
+    I4:'3 5.65 8.2 2.2 b|12.8 5.65 8.2 2.2 w|3 9.15 8.2 2.2 w|12.8 9.15 8.2 2.2 b|3 12.65 8.2 2.2 b|12.8 12.65 8.2 2.2 w|11.65 5.65 0.7 9.2 w|3 16.15 18 2.2 b',
+    I5:'3 3.9 18 2.2 t|3.8 7.4 2.2 11.4 w|8.6 7.4 2.2 8 w|13.4 7.4 2.2 11.4 t|18.2 7.4 2.2 6.2 w|3 19.9 18 0.7 w'
+  };
+
+  glyphFor(code) {
+    if (!this._glyphs) {
+      const C = { s:'#81a28d', w:'#ffffff', b:'#637ba2', t:'#a26c5e', a:'#765f7a' };
+      this._glyphs = {};
+      for (const k in this.glyphSrc) {
+        this._glyphs[k] = this.glyphSrc[k].split('|').map(p => {
+          const v = p.split(' ');
+          return { x:+v[0], y:+v[1], w:+v[2], h:+v[3], f:C[v[4]] };
+        });
+      }
+    }
+    return this._glyphs[code] || [];
+  }
 
   // Quelle: THE WHYKINGS Trainingskatalog 2026
   liveTrainings = [
@@ -476,7 +516,7 @@ class Component extends DCLogic {
 
     const filteredLive = this.liveTrainings.filter(t =>
       (fmt === 'Alle' || t.format === fmt) && (lvl === 'Alle' || String(t.level) === lvl)
-    ).map(t => ({ ...t, nextDate: t.dates && t.dates.length ? t.dates[0] : null, hasPrice: !!t.price }));
+    ).map(t => ({ ...t, glyph: this.glyphFor(t.code), nextDate: t.dates && t.dates.length ? t.dates[0] : null, hasPrice: !!t.price }));
     const filteredComingSoon = this.comingSoon.filter(t => fmt === 'Alle' || t.format === fmt);
 
     return {
