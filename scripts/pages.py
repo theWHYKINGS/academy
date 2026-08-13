@@ -6,14 +6,65 @@ The Academy started as one page and grew into a small multi-page site (homepage
 + training detail pages). Every build script imports PAGES from here so the set
 of pages, their output paths, URLs and <head> metadata live in ONE place.
 
-Adding a training detail page = add one dict below (and make sure the design
-source links to it, and it back). The design filenames carry spaces/umlauts;
-LINK_REWRITES maps those raw filenames to the clean published URLs.
+Adding a training detail page = add one (code, title) tuple to TRAININGS below.
+The design stores each training as `trainings/<title>(<code>).dc.html`; its clean
+URL is the slugified title (so K1 "Die fünf Gespräche" -> /die-fuenf-gespraeche/).
+LINK_REWRITES maps the raw filenames to those URLs for STATIC hrefs (e.g. a detail
+page's "back to home" link); the homepage's catalog "Details" links are built at
+runtime by the design's React, so enhance.js rewrites those by code using
+AK_TRAINING_URLS.
 """
 import re
 import urllib.parse
 
 SITE = "https://www.thewhykingsacademy.com"
+
+# Every training detail page: (code, exact title as it appears in the design
+# filename `trainings/<title>(<code>).dc.html`). Order here only affects logging.
+TRAININGS = [
+    ("K1", "Die fünf Gespräche"),
+    ("K2", "Aus dem Team in Führung"),
+    ("K3", "Führung übernehmen, ohne alles zu übernehmen"),
+    ("K4", "Leistung führen. Menschlich bleiben."),
+    ("K5", "Druck von oben. Erwartungen von unten."),
+    ("K6", "Veränderung führen, die du nicht entschieden hast"),
+    ("K7", "Mitarbeitende im Home Office führen"),
+    ("K8", "Führung durch Führungskräfte"),
+    ("K9", "Entscheiden, wenn es keine gute Lösung gibt"),
+    ("K10", "Das Belastungsgespräch"),
+    ("K11", "Stopp ist eine Führungsentscheidung"),
+    ("K12", "Widerspruch vor Zustimmung"),
+    ("K13", "Entwicklung ohne Beförderung"),
+    ("K14", "KI entscheidet mit"),
+    ("I1", "Die erste Führungsrolle"),
+    ("I2", "Beidhändig führen"),
+    ("I3", "Product Leadership"),
+    ("I4", "Human + AI Leadership"),
+    ("I5", "Führungssysteme, die unter Druck tragen"),
+]
+
+_UMLAUT = {"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss"}
+
+
+def slugify(title):
+    t = title.lower()
+    for a, b in _UMLAUT.items():
+        t = t.replace(a, b)
+    return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
+
+
+def _training_page(code, title):
+    slug = slugify(title)
+    return {
+        "src": f"trainings/{title}({code}).dc.html",
+        "out": f"{slug}/index.html",
+        "url": f"/{slug}/",
+        "code": code,
+        "title": f"{title} — the WHYKINGS ACADEMY",
+        "desc": (f"Führungstraining „{title}“ ({code}) der WHYKINGS Academy: "
+                 f"Inhalte, Format, Termine und Anmeldung."),
+    }
+
 
 # order matters only for logging; `out` is the repo path, `url` the public path
 PAGES = [
@@ -25,18 +76,14 @@ PAGES = [
         "desc": ("Leadership-Trainings der WHYKINGS Academy: praxisnah, wirksam und "
                  "ohne Seminar-Hangover. Kurskatalog, Formate und Kontakt."),
     },
-    {
-        "src": "trainings/Die fünf Gespräche.dc.html",
-        "out": "die-fuenf-gespraeche/index.html",
-        "url": "/die-fuenf-gespraeche/",
-        "title": "Die fünf Gespräche — the WHYKINGS ACADEMY",
-        "desc": ("Führungstraining „Die fünf Gespräche“ der WHYKINGS Academy: "
-                 "Inhalte, Termine und Anmeldung."),
-    },
-]
+] + [_training_page(code, title) for code, title in TRAININGS]
 
-# design source filename  ->  clean published URL
+# design source filename  ->  clean published URL (for STATIC hrefs)
 LINK_REWRITES = {p["src"]: p["url"] for p in PAGES}
+
+# training code -> clean URL. enhance.js injects/reads this to rewrite the
+# homepage's runtime-built catalog "Details" links to the clean slug URLs.
+AK_TRAINING_URLS = {p["code"]: p["url"] for p in PAGES if p.get("code")}
 
 
 def link_variants(name):
@@ -52,10 +99,13 @@ def link_variants(name):
 
 
 def rewrite_links(html):
-    """Replace every href to a design source file with its clean URL."""
+    """Replace every static href to a design source file with its clean URL.
+    Detail pages sit one level deep and link back with a leading "../" (e.g.
+    href="../ACADEMY | HOME.dc.html"), so match that prefix too."""
     for name, url in LINK_REWRITES.items():
         for variant in link_variants(name):
             html = html.replace(f'href="{variant}"', f'href="{url}"')
+            html = html.replace(f'href="../{variant}"', f'href="{url}"')
     return html
 
 

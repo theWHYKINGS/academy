@@ -13,12 +13,13 @@ by hand is wiped each pull. This re-applies it idempotently, per page:
 All links are root-absolute (/legal/…, /assets/…) so they work from any page
 depth. Run after unpack_code.py; deploy.sh does that for you.
 """
+import json
 import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from pages import PAGES, SITE                       # noqa: E402
+from pages import PAGES, SITE, AK_TRAINING_URLS     # noqa: E402
 
 root = Path(__file__).resolve().parent.parent
 
@@ -49,6 +50,17 @@ SLOTFIX = (
     '</style>'
 )
 
+# The homepage builds each catalog card's "Details" link at runtime as
+# `trainings/<title>(<code>).dc.html`. Those raw paths aren't served; publish maps
+# each training code to its clean slug URL. enhance.js reads this global and
+# rewrites the rendered links (see rewriteDetailLinks). Generated from pages.py so
+# the URLs can never drift from the actual published pages.
+TRAINING_URLS_JS = (
+    '<script>window.__akTrainingUrls='
+    + json.dumps(AK_TRAINING_URLS, ensure_ascii=False, separators=(",", ":"))
+    + ';</script>'
+)
+
 
 def head_block(page):
     url = SITE + page["url"]
@@ -68,6 +80,7 @@ def head_block(page):
 <meta property="og:image" content="{SITE}/assets/wordmark-green.png" />
 <meta name="twitter:card" content="summary_large_image" />
 {SLOTFIX}
+{TRAINING_URLS_JS}
 {PLAUSIBLE}
 {END}
 """
