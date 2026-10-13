@@ -36,6 +36,7 @@ TRAININGS = [
     ("K12", "Widerspruch vor Zustimmung"),
     ("K13", "Entwicklung ohne Beförderung"),
     ("K14", "KI entscheidet mit"),
+    ("K15", "Starke Teams entwickeln"),
     ("I1", "Die erste Führungsrolle"),
     ("I2", "Beidhändig führen"),
     ("I3", "Product Leadership"),
