@@ -50,6 +50,29 @@ SLOTFIX = (
     '</style>'
 )
 
+# Motion polish (design-engineering, Emil-Kowalski-style). Two things the generated
+# design misses, re-applied on every pull so they survive a Design re-pull:
+#   1. Press feedback — pill-shaped CTAs (inline-styled <a> with a border-radius)
+#      and <button>s scale down a touch on press, so tapping feels heard. Plain
+#      text links (footer/nav — no border-radius) are untouched, and the design
+#      system Button keeps its own inline press transform (inline wins). Uses the
+#      design's own strong --ease-out token.
+#   2. prefers-reduced-motion — stop the continuous client-logo marquee and drop
+#      the press-scale movement; colour/opacity hovers stay (they aid comprehension).
+#   Plus: pause the marquee on hover so the reference logos are readable.
+MOTIONPOLISH = (
+    '<style data-twk-motion>'
+    'a[style*="border-radius"]{transition:transform var(--dur-fast,120ms) '
+    'var(--ease-out,cubic-bezier(.16,1,.3,1))}'
+    'a[style*="border-radius"]:active,button:active{transform:scale(.97)}'
+    '[style*="twk-marquee"]:hover{animation-play-state:paused!important}'
+    '@media(prefers-reduced-motion:reduce){'
+    '[style*="twk-marquee"]{animation:none!important}'
+    'a[style*="border-radius"]:active,button:active{transform:none!important}'
+    '}'
+    '</style>'
+)
+
 # The homepage builds each catalog card's "Details" link at runtime as
 # `trainings/<title>(<code>).dc.html`. Those raw paths aren't served; publish maps
 # each training code to its clean slug URL. enhance.js reads this global and
@@ -80,6 +103,7 @@ def head_block(page):
 <meta property="og:image" content="{SITE}/assets/wordmark-green.png" />
 <meta name="twitter:card" content="summary_large_image" />
 {SLOTFIX}
+{MOTIONPOLISH}
 {TRAINING_URLS_JS}
 {PLAUSIBLE}
 {END}
