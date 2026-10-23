@@ -50,26 +50,30 @@ SLOTFIX = (
     '</style>'
 )
 
-# Motion polish (design-engineering, Emil-Kowalski-style). Two things the generated
-# design misses, re-applied on every pull so they survive a Design re-pull:
+# Motion polish (design-engineering; Emil-Kowalski + better-ui review). Re-applied on
+# every pull so it survives a Design re-pull:
 #   1. Press feedback — pill-shaped CTAs (inline-styled <a> with a border-radius)
-#      and <button>s scale down a touch on press, so tapping feels heard. Plain
-#      text links (footer/nav — no border-radius) are untouched, and the design
-#      system Button keeps its own inline press transform (inline wins). Uses the
-#      design's own strong --ease-out token.
-#   2. prefers-reduced-motion — stop the continuous client-logo marquee and drop
-#      the press-scale movement; colour/opacity hovers stay (they aid comprehension).
-#   Plus: pause the marquee on hover so the reference logos are readable.
+#      scale to 0.96 over 150ms on press (better-ui's exact press value). Scoped to
+#      <a> only: the design-system <button> already has its own press gesture
+#      (translateY), so touching <button> here would (a) impose a second, competing
+#      press language and (b) scale a <button> even while it's :disabled (the Infocall
+#      submit disables during send). Plain text links (footer/nav — no border-radius)
+#      are untouched. tap-highlight-color is cleared so the grey mobile flash doesn't
+#      double our own pressed state.
+#   2. prefers-reduced-motion — stop the continuous client-logo marquee and drop the
+#      press-scale; colour/opacity hovers stay (they aid comprehension).
+#   Plus: pause the marquee on hover (hover-capable pointers only, so a mobile tap
+#   can't latch it paused) so the reference logos are readable.
 MOTIONPOLISH = (
     '<style data-twk-motion>'
-    'a[style*="border-radius"]{transition:transform var(--dur-fast,120ms) '
-    'var(--ease-out,cubic-bezier(.16,1,.3,1))}'
-    'a[style*="border-radius"]:active,button:active{transform:scale(.97)}'
+    'a[style*="border-radius"]{transition:transform 150ms '
+    'var(--ease-out,cubic-bezier(.16,1,.3,1));-webkit-tap-highlight-color:transparent}'
+    'a[style*="border-radius"]:active{transform:scale(.96)}'
     '@media(hover:hover) and (pointer:fine){'
     '[style*="twk-marquee"]:hover{animation-play-state:paused!important}}'
     '@media(prefers-reduced-motion:reduce){'
     '[style*="twk-marquee"]{animation:none!important}'
-    'a[style*="border-radius"]:active,button:active{transform:none!important}'
+    'a[style*="border-radius"]:active{transform:none!important}'
     '}'
     '</style>'
 )
