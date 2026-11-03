@@ -67,20 +67,30 @@ def _training_page(code, title):
     }
 
 
-# order matters only for logging; `out` is the repo path, `url` the public path
-PAGES = [
-    {
-        "src": "ACADEMY | HOME.dc.html",
-        "out": "index.html",
-        "url": "/",
-        "title": "the WHYKINGS ACADEMY — Leadership-Trainings ohne Seminar-Hangover",
-        "desc": ("Leadership-Trainings der WHYKINGS Academy: praxisnah, wirksam und "
-                 "ohne Seminar-Hangover. Kurskatalog, Formate und Kontakt."),
-    },
-] + [_training_page(code, title) for code, title in TRAININGS]
+# The homepage is a hand-maintained static file since 2026-11-03: the green-helmet
+# redesign was ported out of Claude Design straight into index.html. It is NO LONGER
+# pulled from Design or post-processed by the pipeline — inject_head would add a second
+# <head> and inject_enhance a second contact form (the ported page is self-contained:
+# its own form, fonts + GSAP/Lenis vendored locally). So HOME is kept OUT of PAGES (the
+# list every build script iterates). Its src->url mapping stays in LINK_REWRITES so the
+# detail pages' "../ACADEMY | HOME.dc.html" back-links still rewrite to "/". To change the
+# homepage, edit index.html directly. Rollback to the pre-redesign page: git tag
+# live-vor-gruenem-helm.
+HOME = {
+    "src": "ACADEMY | HOME.dc.html",
+    "out": "index.html",
+    "url": "/",
+    "title": "the WHYKINGS ACADEMY — Leadership-Trainings ohne Seminar-Hangover",
+    "desc": ("Leadership-Trainings der WHYKINGS Academy: praxisnah, wirksam und "
+             "ohne Seminar-Hangover. Kurskatalog, Formate und Kontakt."),
+}
 
-# design source filename  ->  clean published URL (for STATIC hrefs)
-LINK_REWRITES = {p["src"]: p["url"] for p in PAGES}
+# order matters only for logging; `out` is the repo path, `url` the public path
+PAGES = [_training_page(code, title) for code, title in TRAININGS]
+
+# design source filename  ->  clean published URL (for STATIC hrefs). Includes HOME so
+# the detail pages' back-to-home links rewrite even though HOME isn't pipeline-processed.
+LINK_REWRITES = {p["src"]: p["url"] for p in [HOME] + PAGES}
 
 # training code -> clean URL. enhance.js injects/reads this to rewrite the
 # homepage's runtime-built catalog "Details" links to the clean slug URLs.
